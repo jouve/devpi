@@ -1,6 +1,6 @@
-FROM python:3.6-alpine3.7
+FROM python:3.7-alpine3.8
 
-ARG DEVPI_SERVER_VERSION=4.5.0
+ARG DEVPI_SERVER_VERSION=4.6.0
 ARG DEVPI_WEB_VERSION=3.3.0
 RUN apk add --no-cache libffi gcc musl-dev libffi-dev && \
     pip install --no-cache-dir "devpi-server==$DEVPI_SERVER_VERSION" "devpi-web==$DEVPI_WEB_VERSION" && \

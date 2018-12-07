@@ -50,7 +50,6 @@
                 "sha256:d371fcd42e01c78c76397120d07c67f6e16f5fef97d327ad372c8debe38f9f56",
                 "sha256:ec12248d4c1e045a736beebf55daf1430c45a29ab8d773d8540c224555784275"
             ],
-            "markers": "extra == 'argon2'",
             "version": "==18.3.0"
         },
         "beautifulsoup4": {
@@ -156,7 +155,6 @@
                 "sha256:e8932bddf159064f04e946fbb64693753488de21586f20e840b3be51745c8c09",
                 "sha256:f20900f16377f2109783ae9348d34bc80530808439591c3d3df73d5c7ef1a00c"
             ],
-            "markers": "extra == 'md'",
             "version": "==0.4.2"
         },
         "defusedxml": {
@@ -196,6 +194,15 @@
                 "sha256:7a4bd47eaf6596e1295ecb11361139febe29b084a87bf005bf899f9a42edc3c6"
             ],
             "version": "==0.14"
+        },
+        "enum34": {
+            "hashes": [
+                "sha256:2d81cbbe0e73112bdfe6ef8576f2238f2ba27dd0d55752a776c41d38b7da2850",
+                "sha256:644837f692e5f550741432dd3f223bbb9852018674981b1664e5dc339387588a",
+                "sha256:6bd0f6ad48ec2aa117d3d141940d484deccda84d4fcd884f5c3d93c23ecd8c79",
+                "sha256:8ad8c4783bf61ded74527bffb48ed9b54166685e4230386a9ed9b1279e2df5b1"
+            ],
+            "version": "==1.1.6"
         },
         "execnet": {
             "hashes": [

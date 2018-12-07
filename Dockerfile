@@ -1,15 +1,12 @@
 FROM python:3.7-alpine3.8
 
-COPY lock.py Pipfile.lock /
-
-RUN python lock.py <Pipfile.lock >requirements.txt
-
-FROM python:3.7-alpine3.8
-
-COPY --from=0 /requirements.txt .
+COPY Pipfile Pipfile.lock ./
 
 RUN apk add --no-cache gcc libffi libffi-dev musl-dev && \
-    pip install --no-cache-dir -r requirements.txt && \
+    pip install pipenv==2018.11.26 && \
+    pipenv install --system --deploy && \
+    pip uninstall -y virtualenv virtualenv-clone pipenv && \
+    rm -rf /root/.cache && \
     apk del --no-cache gcc libffi-dev musl-dev
 
 EXPOSE 3141

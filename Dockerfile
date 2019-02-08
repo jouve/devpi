@@ -2,13 +2,13 @@ FROM alpine:3.8
 
 COPY Pipfile Pipfile.lock ./
 
-RUN apk add --no-cache gcc libffi libffi-dev musl-dev && \
+RUN apk add --no-cache gcc libffi libffi-dev musl-dev python3 python3-dev && \
     pip3 install pip==19.0.1 && \
     pip install pipenv==2018.11.26 && \
     pipenv install --system --deploy && \
     pip uninstall -y virtualenv virtualenv-clone pipenv && \
     rm -rf /root/.cache && \
-    apk del --no-cache gcc libffi-dev musl-dev
+    apk del --no-cache gcc libffi-dev musl-dev python3-dev
 
 EXPOSE 3141
 

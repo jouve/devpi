@@ -6,8 +6,8 @@ RUN adduser -D devpi
 
 RUN set -e; \
     apk add --no-cache gcc libffi libffi-dev musl-dev python3 python3-dev; \
-    pip3 install pip==19.2.1; \
-    pip install certifi==2019.6.16 pipenv==2018.11.26 virtualenv==16.7.0 virtualenv-clone==0.5.3; \
+    pip3 install pip==19.3.1; \
+    pip install certifi==2019.9.11 pipenv==2018.11.26 virtualenv==16.7.7 virtualenv-clone==0.5.3; \
     pipenv install --system --deploy; \
     pip uninstall -y virtualenv virtualenv-clone pipenv; \
     rm -rf /root/.cache; \

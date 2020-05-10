@@ -5,7 +5,7 @@ if ! test -w /var/run/docker.sock; then
 else
   SUDO=
 fi
-$SUDO docker run -it -v $PWD:/srv -w /srv $(sed -n -e 's/FROM //p' Dockerfile) sh -c "
+$SUDO docker run -it -v $PWD:/srv -w /srv $(head -n1 Dockerfile | sed -n -e 's/FROM //p') sh -c "
 set -e
 apk add --no-cache gcc libffi libffi-dev musl-dev python3 python3-dev
 pip3 install --upgrade pip

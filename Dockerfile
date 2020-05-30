@@ -1,6 +1,4 @@
-FROM alpine:3.11.6
-
-COPY Pipfile Pipfile.lock /
+FROM alpine:3.12.0
 
 RUN set -e; \
     apk add --no-cache python3; \
@@ -11,20 +9,24 @@ RUN set -e; \
         distlib==0.3.0 \
         filelock==3.0.12 \
         pipenv==2018.11.26 \
-        six==1.14.0 \
+        six==1.15.0 \
+        virtualenv==20.0.21 \
         virtualenv-clone==0.5.4 \
-        virtualenv==20.0.20 \
-    ; \
-    /tmp/pipenv/bin/pipenv lock -r > requirements.txt
+    ;
 
-FROM alpine:3.11.6
+COPY Pipfile Pipfile.lock /
 
-COPY --from=0 /requirements.txt /
+RUN /tmp/pipenv/bin/pipenv lock -r > requirements.txt
+
+FROM alpine:3.12.0
+
+COPY --from=0 /requirements.txt /usr/share/devpi/requirements.txt
 
 RUN set -e; \
     apk add --no-cache libffi python3 \
                        gcc libffi-dev musl-dev python3-dev; \
-    pip3 install --no-cache-dir -r requirements.txt; \
+    python3 -m venv /usr/share/devpi; \
+    /usr/share/devpi/bin/pip install --no-cache-dir -r /usr/share/devpi/requirements.txt; \
     find -name __pycache__ | xargs rm -rf; \
     rm -rf /root/.cache; \
     apk del --no-cache gcc libffi-dev musl-dev python3-dev; \

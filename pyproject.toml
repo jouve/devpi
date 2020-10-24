@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "devpi-docker"
+version = "0.1.0"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = "~3.8"
+devpi-server = "*"
+devpi-web = "*"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

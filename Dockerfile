@@ -1,32 +1,28 @@
-FROM alpine:3.12.0
+# syntax=docker/dockerfile:experimental
+
+FROM alpine:3.12.1
 
 COPY poetry.txt /
 
-RUN set -e; \
-    apk add --no-cache gcc libffi-dev musl-dev openssl-dev python3-dev; \
-    python3 -m venv /usr/share/poetry; \
-    /usr/share/poetry/bin/pip install -c /poetry.txt pip; \
-    /usr/share/poetry/bin/pip install -c /poetry.txt wheel; \
-    /usr/share/poetry/bin/pip install -c /poetry.txt poetry
+RUN apk add --no-cache gcc libffi-dev musl-dev openssl-dev python3-dev
+RUN python3 -m venv /usr/share/poetry
+RUN /usr/share/poetry/bin/pip install -c /poetry.txt pip
+RUN /usr/share/poetry/bin/pip install -c /poetry.txt wheel
+RUN /usr/share/poetry/bin/pip install -c /poetry.txt poetry
 
-COPY pyproject.toml poetry.lock /srv/
+COPY pyproject.toml poetry.lock /
 
-WORKDIR /srv
+RUN --mount=type=cache,target=/srv /usr/share/poetry/bin/poetry export --without-hashes > /srv/requirements.txt
+RUN --mount=type=cache,target=/srv cd /srv && /usr/share/poetry/bin/pip wheel -r requirements.txt
 
-RUN /usr/share/poetry/bin/poetry export > /requirements.txt
+FROM alpine:3.12.1
 
-FROM alpine:3.12.0
-
-COPY --from=0 /requirements.txt /usr/share/devpi/requirements.txt
-
-RUN set -e; \
-    apk add --no-cache libffi python3 \
-                       gcc libffi-dev musl-dev python3-dev; \
+RUN --mount=type=cache,target=/srv \
+    set -e; \
+    apk add --no-cache libffi python3; \
     python3 -m venv /usr/share/devpi; \
-    /usr/share/devpi/bin/pip install --no-cache-dir -r /usr/share/devpi/requirements.txt; \
-    find -name __pycache__ | xargs rm -rf; \
-    rm -rf /root/.cache; \
-    apk del --no-cache gcc libffi-dev musl-dev python3-dev; \
+    /usr/share/devpi/bin/pip install --no-cache-dir --find-links file:///srv -r /srv/requirements.txt; \
+    find /usr -name __pycache__ -print0 | xargs -0 rm -rf; \
     adduser -D devpi; \
     mkdir /var/lib/devpi; \
     chown devpi:devpi /var/lib/devpi

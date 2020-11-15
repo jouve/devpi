@@ -6,10 +6,10 @@ else
   SUDO=
 fi
 
-docker volume create apk-cache || true
-docker volume create pip-cache || true
-docker volume create poetry-cache || true
-docker volume create poetry-artifacts || true
+$SUDO docker volume create apk-cache || true
+$SUDO docker volume create pip-cache || true
+$SUDO docker volume create poetry-cache || true
+$SUDO docker volume create poetry-artifacts || true
 $SUDO docker run -i -t \
   -v apk-cache:/var/cache/apk \
   -v pip-cache:/root/.cache/pip \

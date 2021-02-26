@@ -5,9 +5,7 @@ COPY poetry.txt /
 RUN set -e; \
     apk add --no-cache cargo gcc libffi-dev musl-dev openssl-dev python3-dev; \
     python3 -m venv /usr/share/poetry; \
-    /usr/share/poetry/bin/pip install -c /poetry.txt pip; \
-    /usr/share/poetry/bin/pip install -c /poetry.txt wheel; \
-    /usr/share/poetry/bin/pip install -c /poetry.txt poetry
+    /usr/share/poetry/bin/pip install -r /poetry.txt
 
 COPY pyproject.toml poetry.lock /srv/
 
@@ -17,7 +15,7 @@ RUN /usr/share/poetry/bin/poetry export --without-hashes > /requirements.txt
 
 FROM alpine:3.13.0
 
-COPY --from=0 /requirements.txt /usr/share/certbot/requirements.txt
+COPY --from=0 /requirements.txt /usr/share/devpi/requirements.txt
 
 RUN set -e; \
     apk add --no-cache libffi python3 \

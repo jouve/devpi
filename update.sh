@@ -22,10 +22,7 @@ apk add --no-cache alpine-conf
 setup-apkcache /var/cache/apk
 apk add --no-cache cargo gcc libffi-dev musl-dev openssl-dev python3-dev;
 python3 -m venv /usr/share/poetry
-/usr/share/poetry/bin/pip install --upgrade pip
-/usr/share/poetry/bin/pip install wheel
-/usr/share/poetry/bin/pip install poetry
-/usr/share/poetry/bin/pip freeze --all > poetry.txt
+/usr/share/poetry/bin/pip install -r poetry.txt
 /usr/share/poetry/bin/poetry lock
 apk add --no-cache libffi python3 \
                    gcc libffi-dev musl-dev python3-dev

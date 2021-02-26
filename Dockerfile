@@ -21,6 +21,7 @@ RUN set -e; \
     apk add --no-cache libffi python3 \
                        cargo gcc libffi-dev make musl-dev python3-dev; \
     python3 -m venv /usr/share/devpi; \
+    /usr/share/devpi/bin/pip install --no-cache-dir wheel=0.36.2; \
     /usr/share/devpi/bin/pip install --no-cache-dir -r /usr/share/devpi/requirements.txt; \
     find /usr -name __pycache__ -print0 | xargs -0 rm -rf; \
     adduser -D devpi; \

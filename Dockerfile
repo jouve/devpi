@@ -1,33 +1,39 @@
-FROM alpine:3.13.2
-
-COPY poetry.txt /
-
-RUN set -e; \
-    apk add --no-cache cargo gcc libffi-dev musl-dev openssl-dev python3-dev; \
-    python3 -m venv /usr/share/poetry; \
-    /usr/share/poetry/bin/pip install -r /poetry.txt
+FROM jouve/poetry:1.1.6-alpine3.13.5
 
 COPY pyproject.toml poetry.lock /srv/
 
 WORKDIR /srv
 
-RUN /usr/share/poetry/bin/poetry export --without-hashes > /requirements.txt
+RUN poetry export --without-hashes > /requirements.txt
 
-FROM alpine:3.13.2
+FROM alpine:3.13.5
 
 COPY --from=0 /requirements.txt /usr/share/devpi/requirements.txt
 
 RUN set -e; \
-    apk add --no-cache libffi python3 \
-                       cargo gcc libffi-dev make musl-dev python3-dev; \
+    apk add --no-cache --virtual .build-deps \
+        cargo \
+        gcc \
+        libffi-dev \
+        make \
+        musl-dev \
+        openssl-dev \
+        python3-dev \
+    ; \
     python3 -m venv /usr/share/devpi; \
-    /usr/share/devpi/bin/pip install --no-cache-dir wheel==0.36.2; \
-    /usr/share/devpi/bin/pip install --no-cache-dir -r /usr/share/devpi/requirements.txt; \
-    find /usr -name __pycache__ -print0 | xargs -0 rm -rf; \
+    /usr/share/devpi/bin/pip install wheel==0.36.2; \
+    /usr/share/devpi/bin/pip install -r /usr/share/devpi/requirements.txt; \
     adduser -D devpi; \
     mkdir /var/lib/devpi; \
     chown devpi:devpi /var/lib/devpi; \
-    apk del --no-cache cargo gcc libffi-dev make musl-dev python3-dev
+    apk add --no-network --virtual .run-deps $( \
+        scanelf --needed --nobanner --format '%n#p' --recursive /usr/share/poetry \
+        | tr ',' '\n' \
+        | sed 's/^/so:/' \
+        | sort -u \
+    ); \
+    apk del --no-cache --no-network .build-deps; \
+    rm -rf /root/.cache /root/.cargo
 
 COPY docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
 

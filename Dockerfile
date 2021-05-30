@@ -26,13 +26,13 @@ RUN set -e; \
     adduser -D devpi; \
     mkdir /var/lib/devpi; \
     chown devpi:devpi /var/lib/devpi; \
-    apk add --no-network --virtual .run-deps $( \
-        scanelf --needed --nobanner --format '%n#p' --recursive /usr/share/poetry \
+    apk add --no-cache --virtual .run-deps python3 $( \
+        scanelf --needed --nobanner --format '%n#p' --recursive /usr/share/devpi \
         | tr ',' '\n' \
         | sed 's/^/so:/' \
         | sort -u \
     ); \
-    apk del --no-cache --no-network .build-deps; \
+    apk del --no-cache .build-deps; \
     rm -rf /root/.cache /root/.cargo
 
 COPY docker-entrypoint.sh /usr/bin/docker-entrypoint.sh

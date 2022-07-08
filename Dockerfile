@@ -1,4 +1,4 @@
-FROM jouve/poetry:1.1.13-alpine3.15.1
+FROM jouve/poetry:1.1.14-alpine3.16.0
 
 COPY pyproject.toml poetry.lock /srv/
 
@@ -6,7 +6,7 @@ WORKDIR /srv
 
 RUN poetry export --without-hashes > /requirements.txt
 
-FROM alpine:3.15.0
+FROM alpine:3.16.0
 
 COPY --from=0 /requirements.txt /usr/share/devpi/requirements.txt
 
@@ -19,7 +19,7 @@ RUN set -e; \
         python3-dev \
     ; \
     python3 -m venv /usr/share/devpi; \
-    /usr/share/devpi/bin/pip install pip==21.2.4 wheel==0.37.0; \
+    /usr/share/devpi/bin/pip install pip==22.1.2 setuptools==63.1.0 wheel==0.37.1; \
     /usr/share/devpi/bin/pip install -r /usr/share/devpi/requirements.txt; \
     adduser -D devpi; \
     mkdir /var/lib/devpi; \

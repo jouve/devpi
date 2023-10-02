@@ -1,4 +1,4 @@
-FROM jouve/poetry:1.4.2-alpine3.18.0
+FROM jouve/poetry:1.6.1-alpine3.18.4
 
 COPY pyproject.toml poetry.lock /srv/
 
@@ -6,7 +6,7 @@ WORKDIR /srv
 
 RUN poetry export --without-hashes > /requirements.txt
 
-FROM alpine:3.18.0
+FROM alpine:3.18.4
 
 COPY --from=0 /requirements.txt /usr/share/devpi/requirements.txt
 
@@ -19,7 +19,7 @@ RUN set -e; \
         python3-dev \
     ; \
     python3 -m venv /usr/share/devpi; \
-    /usr/share/devpi/bin/pip install --no-cache-dir pip==23.1.2 setuptools==67.7.2 wheel==0.40.0; \
+    /usr/share/devpi/bin/pip install --no-cache-dir pip==23.2.1 setuptools==68.2.2 wheel==0.41.2; \
     /usr/share/devpi/bin/pip install --no-cache-dir --requirement /usr/share/devpi/requirements.txt; \
     adduser -D devpi; \
     mkdir /var/lib/devpi; \
@@ -31,6 +31,7 @@ RUN set -e; \
         | sed 's/^/so:/' \
         | sort -u \
         | grep -v libgcc_s \
+        | grep -v libc.so \
     ); \
     apk del --no-cache .build-deps
 

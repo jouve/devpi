@@ -2,9 +2,7 @@ FROM jouve/poetry:1.6.1-alpine3.18.4
 
 COPY pyproject.toml poetry.lock /srv/
 
-WORKDIR /srv
-
-RUN poetry export --without-hashes > /requirements.txt
+RUN poetry -C /srv/ export --without-hashes > /requirements.txt
 
 FROM alpine:3.18.4
 

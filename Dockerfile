@@ -1,10 +1,10 @@
-FROM jouve/poetry:1.6.1-alpine3.18.4
+FROM jouve/poetry:1.8.3-alpine3.20.1
 
 COPY pyproject.toml poetry.lock /srv/
 
 RUN poetry -C /srv/ export --without-hashes > /requirements.txt
 
-FROM alpine:3.18.4
+FROM alpine:3.20.1
 
 COPY --from=0 /requirements.txt /usr/share/devpi/requirements.txt
 
